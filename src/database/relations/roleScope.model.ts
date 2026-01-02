@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
-import DB from "../../database";
-import Role from "../../../modules/role/role.model";
-import Scope from "../../../modules/scope/scope.model";
+import DB from "../database";
+import Role from "../../modules/role/role.model";
+import Scope from "../../modules/scope/scope.model";
 
 class RoleScope extends Model {
   public role!: number;

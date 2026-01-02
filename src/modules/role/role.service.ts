@@ -1,6 +1,6 @@
 import Role from "./role.model";
 import Scope from "../../modules/scope/scope.model";
-import RoleScope from "../../database/relations/scope/roleScope.model";
+import RoleScope from "../../database/relations/roleScope.model";
 
 const roleService = {
     getAllRoles: async () => {

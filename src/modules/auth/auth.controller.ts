@@ -73,7 +73,7 @@ const authController = {
             }
             if(password !== confirmPassword)
             {
-                sendErrorResponse(res, 401, "Ambas contraseñas son diferentes");
+                sendErrorResponse(res, 400, "Ambas contraseñas son diferentes");
                 return;
             }
             const user = await userService.getUserByEmail(email);

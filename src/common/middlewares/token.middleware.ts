@@ -1,14 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { verifyToken } from "../utils/token.util";
 import { sendErrorResponse } from "../utils/response.util";
 import userService from "../../modules/user/user.service";
 import roleService from "../../modules/role/role.service";
-import { JwtPayload } from "jsonwebtoken";
-
-interface AuthRequest extends Request {
-    user?: JwtPayload;
-    cookies: { [key: string]: string };
-}
+import { AuthRequest } from "../interfaces/token.interface";
 
 export const authSession = (req: AuthRequest, res: Response, next: NextFunction) => {
     try 

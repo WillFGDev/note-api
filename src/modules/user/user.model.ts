@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import DB from "../../database/database";
 import Role from "../role/role.model";
+import Note from "../note/note.model";
 
 class User extends Model {
     public id!: number;
@@ -9,12 +10,15 @@ class User extends Model {
     public email!: string;
     public password!: string;
     
+    public notes?: Note[];
+
     toJSON() {
         const values = { ...this.get() };
         delete values.password;
         return values;
     }
 }
+
 
 User.init(
     {

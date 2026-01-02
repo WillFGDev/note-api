@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/index.js",
+    "build": "tsc && npm run copy-files",
+    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
+    "test": "jest",
+    "copy-files": "cp src/database/database.sqlite dist/database/database.sqlite"
   },
   "keywords": [],
   "author": "Williner Garcia Dev",
@@ -15,7 +19,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.9.0",
     "@types/sequelize": "^4.28.20",
@@ -33,7 +37,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.0",
     "sequelize": "^6.37.5",
     "sqlite3": "^5.1.7",

@@ -9,6 +9,7 @@ import userRoutes from "./modules/user/user.routes";
 import roleRoutes from "./modules/role/role.routes";
 import scopeRoutes from "./modules/scope/scope.routes";
 import noteRoutes from "./modules/note/note.routes";
+import logRoutes from "./modules/log/log.routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger/swagger";
 //import { DBDefaultSetup } from "./database/defaultSetup";
@@ -27,6 +28,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/role", roleRoutes);
 app.use("/api/scope", scopeRoutes);
 app.use("/api/note", noteRoutes);
+app.use("/api/log", logRoutes);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //DBDefaultSetup();

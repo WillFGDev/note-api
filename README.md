@@ -4,7 +4,7 @@ API REST para la gestión de notas con autenticación de usuarios, desarrollada 
 
 ## Tecnologías / Herramientas
 
-- Node.js
+- Node.js 22
 - TypeScript
 - Express
 - Sequelize
@@ -14,6 +14,7 @@ API REST para la gestión de notas con autenticación de usuarios, desarrollada 
 - Cookie-Parser
 - Swagger
 - Jest
+- Docker
 
 ## Funcionalidades
 
@@ -24,7 +25,7 @@ API REST para la gestión de notas con autenticación de usuarios, desarrollada 
 - Logs, Validaciones y manejo de errores
 - Pruebas unitarias
 
-## Instalación y ejecución
+## Instalación y ejecución local
 
 1. Clonar el repositorio:
    ```git clone https://github.com/WillFGDev/note-api.git```
@@ -41,9 +42,28 @@ API REST para la gestión de notas con autenticación de usuarios, desarrollada 
 4. Ejecutar en desarrollo:
    ```npm run dev```
 
+## Documentacion
+
+Swagger disponible en: ```http://localhost:3000/```
+
+## Unit tests
+
+Para ejecutar las pruebas unitarias ejecuta el siguiente script:
+```npm run test```
+
+## Build
+
+Para buildear el proyecto se ejecuta el siguiente script:
+```npm run build```
+
+## Docker
+
+Para ejecutar con Docker:
+```docker compose up --build```
+
 ## Estado del proyecto
 
-Proyecto en desarrollo, creado con fines demostrativos y de evaluación técnica, aun faltan detalles por pulir.
+Proyecto en desarrollo, creado con fines demostrativos y de evaluación técnica, puede extenderse con nuevas funcionalidades.
 
 ## Autor
 

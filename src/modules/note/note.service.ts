@@ -36,8 +36,9 @@ const noteService = {
     updateNote: async (id: number, noteData: IUpdateNote) => {
         const note = await Note.findByPk(id);
         if (!note) return null;
+        const oldNote = { ...note.get() };
         const updatedNote = await note.update(noteData);
-        return { before: note, after: updatedNote };
+        return { before: oldNote, after: updatedNote };
     },
 
     deleteNote: async (id: number) => {

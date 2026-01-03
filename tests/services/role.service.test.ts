@@ -9,7 +9,7 @@ jest.mock("../../src/modules/role/role.model", () => ({
   create: jest.fn(),
 }));
 jest.mock("../../src/modules/scope/scope.model");
-jest.mock("../../src/database/relations/scope/roleScope.model", () => ({
+jest.mock("../../src/database/relations/roleScope.model", () => ({
   bulkCreate: jest.fn(),
   destroy: jest.fn(),
 }));

@@ -8,7 +8,7 @@ jest.mock("../../src/modules/note/note.model", () => ({
   create: jest.fn(),
 }));
 
-jest.mock("../../src/modules/userNote/userNote.model", () => ({
+jest.mock("../../src/database/relations/userNote.model", () => ({
   bulkCreate: jest.fn(),
   findOne: jest.fn(),
 }));

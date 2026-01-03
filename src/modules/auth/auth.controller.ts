@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { compare, hash } from "bcrypt";
+import { compare } from "bcrypt";
 import { tokenSign } from "../../common/utils/token.util";
 import { sendSuccessResponse, sendErrorResponse } from "../../common/utils/response.util";
 import userService from "../user/user.service";
@@ -82,8 +82,7 @@ const authController = {
                 sendErrorResponse(res, 409, "Correo ya registrado, intente registrarse con otro correo");
                 return;
             }
-            const hashPassword = await hash(password, 10);
-            const newUser = await userService.createUser({ name, email, password: hashPassword, role: 2 });
+            const newUser = await userService.createUser({ name, email, password, role: 2 });
             sendSuccessResponse(res, 201, "Usuario registrado", newUser);  
         } 
         catch (error) 

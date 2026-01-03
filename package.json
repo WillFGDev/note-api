@@ -7,7 +7,8 @@
     "build": "tsc && npm run copy-files",
     "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
     "test": "jest",
-    "copy-files": "cp src/database/database.sqlite dist/database/database.sqlite"
+    "copy-files": "cp src/database/database.sqlite dist/database/database.sqlite && cp src/docs/swagger/schema/swaggerSchemas.json dist/docs/swagger/schema/swaggerSchemas.json",
+    "generate:schema": "ts-node src/docs/swagger/schema/generateSchema.ts"
   },
   "keywords": [],
   "author": "Williner Garcia Dev",

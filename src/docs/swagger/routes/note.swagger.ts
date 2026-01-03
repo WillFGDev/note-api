@@ -313,6 +313,13 @@
  *     security:
  *       - CookieAuth: []
  *     tags: [Note]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID de la nota
  *     requestBody:
  *       required: true
  *       content:

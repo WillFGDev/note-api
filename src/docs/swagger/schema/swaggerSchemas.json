@@ -282,7 +282,7 @@
     "IShareNote":{
       "type": "object",
       "properties": {
-        "UsersId":{
+        "usersId":{
           "type": "array",
           "items": {
             "type":"number"

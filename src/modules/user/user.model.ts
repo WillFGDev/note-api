@@ -10,7 +10,7 @@ class User extends Model {
     public email!: string;
     public password!: string;
     
-    public notes?: Note[];
+    public Notes?: Note[];
 
     toJSON() {
         const values = { ...this.get() };

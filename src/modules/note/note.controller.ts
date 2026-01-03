@@ -122,7 +122,7 @@ const noteController = {
                 entity: "Note",
                 entityId: id,
                 before: updatedNote?.before,
-                after: updatedNote?.before,
+                after: updatedNote?.after,
             });
         } 
         catch (error) 

@@ -12,7 +12,6 @@ import noteRoutes from "./modules/note/note.routes";
 import logRoutes from "./modules/log/log.routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger/swagger";
-//import { DBDefaultSetup } from "./database/defaultSetup";
 
 dotenv.config();
 const app = express();
@@ -31,7 +30,6 @@ app.use("/api/note", noteRoutes);
 app.use("/api/log", logRoutes);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-//DBDefaultSetup();
 
 app.use(errorHandler);
 

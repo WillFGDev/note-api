@@ -14,6 +14,7 @@ const noteService = {
             include: [
                 {
                     model: Note,
+                    as: "SharedNotes",
                     through: { attributes: [] }
                 }
             ]

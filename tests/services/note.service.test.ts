@@ -1,10 +1,16 @@
 import noteService from "../../src/modules/note/note.service";
 import Note from "../../src/modules/note/note.model";
+import UserNote from "../../src/database/relations/userNote.model";
 
 jest.mock("../../src/modules/note/note.model", () => ({
   findAll: jest.fn(),
   findByPk: jest.fn(),
   create: jest.fn(),
+}));
+
+jest.mock("../../src/modules/userNote/userNote.model", () => ({
+  bulkCreate: jest.fn(),
+  findOne: jest.fn(),
 }));
 
 describe("noteService", () => {
@@ -116,6 +122,70 @@ describe("noteService", () => {
       const result = await noteService.deleteNote(999);
 
       expect(Note.findByPk).toHaveBeenCalledWith(999);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("shareNote", () => {
+    it("debe retornar null si no se envían usuarios", async () => {
+      const result = await noteService.shareNote(1, []);
+
+      expect(result).toBeNull();
+      expect(UserNote.bulkCreate).not.toHaveBeenCalled();
+    });
+
+    it("debe crear relaciones correctamente", async () => {
+      const mockRelations = [{ user: 2, note: 1 }];
+
+      (UserNote.bulkCreate as jest.Mock).mockResolvedValue(mockRelations);
+
+      const result = await noteService.shareNote(1, [2]);
+
+      expect(UserNote.bulkCreate).toHaveBeenCalledWith(
+        [{ user: 2, note: 1 }],
+        { ignoreDuplicates: true }
+      );
+      expect(result).toEqual(mockRelations);
+    });
+
+    it("debe crear múltiples relaciones", async () => {
+      const usersId = [2, 3, 4];
+      const expectedRelations = usersId.map(user => ({
+        user,
+        note: 1
+      }));
+
+      (UserNote.bulkCreate as jest.Mock).mockResolvedValue(expectedRelations);
+
+      const result = await noteService.shareNote(1, usersId);
+
+      expect(UserNote.bulkCreate).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(expectedRelations);
+    });
+  });
+
+  describe("isShared", () => {
+    it("debe devolver la relación si existe", async () => {
+      const mockRelation = { user: 1, note: 2 };
+
+      (UserNote.findOne as jest.Mock).mockResolvedValue(mockRelation);
+
+      const result = await noteService.isShared(1, 2);
+
+      expect(UserNote.findOne).toHaveBeenCalledWith({
+        where: { user: 1, note: 2 }
+      });
+      expect(result).toEqual(mockRelation);
+    });
+
+    it("debe devolver null si no existe la relación", async () => {
+      (UserNote.findOne as jest.Mock).mockResolvedValue(null);
+
+      const result = await noteService.isShared(1, 2);
+
+      expect(UserNote.findOne).toHaveBeenCalledWith({
+        where: { user: 1, note: 2 }
+      });
       expect(result).toBeNull();
     });
   });

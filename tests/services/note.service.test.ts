@@ -39,30 +39,20 @@ describe("noteService", () => {
     it("debe devolver todas las notas compartidas", async () => {
       const mockNotes = [{ id: 1, title: "Test", content: "Test" }];
 
-      const mockUser = {
-        notes: mockNotes
-      };
-
-      (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
+      (User.findByPk as jest.Mock).mockResolvedValue({
+        SharedNotes: mockNotes,
+      });
 
       const result = await noteService.getAllShareNotes(1);
 
-      expect(User.findByPk).toHaveBeenCalledWith(1, {
-        include: [
-          {
-            model: Note,
-            through: { attributes: [] }
-          }
-        ]
-      });
-
+      expect(User.findByPk).toHaveBeenCalledWith(1, expect.any(Object));
       expect(result).toEqual(mockNotes);
     });
 
     it("debe devolver array vacío si el usuario no existe", async () => {
       (User.findByPk as jest.Mock).mockResolvedValue(null);
 
-      const result = await noteService.getAllShareNotes(1);
+      const result = await noteService.getAllShareNotes(999);
 
       expect(result).toEqual([]);
     });

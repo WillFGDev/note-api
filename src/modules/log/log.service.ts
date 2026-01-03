@@ -10,10 +10,9 @@ const logService = {
         entityId,
         before = null,
         after = null,
-    }: LogParams): Promise<void> => {
-        try 
-        {
-            await Log.create({
+    }: LogParams) => {
+        try {
+            return await Log.create({
                 userId,
                 action,
                 description,
@@ -22,10 +21,9 @@ const logService = {
                 before,
                 after,
             });
-        } 
-        catch (error) 
-        {
+        } catch (error) {
             console.error("Error guardando auditoría:", error);
+            throw error;
         }
     },
 

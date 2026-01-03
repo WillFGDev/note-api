@@ -32,7 +32,7 @@ UserNote.init(
   }
 );
 
-User.belongsToMany(Note, { through: UserNote, foreignKey: "user", otherKey: "note" });
-Note.belongsToMany(User, { through: UserNote, foreignKey: "note", otherKey: "user" });
+User.belongsToMany(Note, { through: UserNote, foreignKey: "user", otherKey: "note", as: "SharedNotes" });
+Note.belongsToMany(User, { through: UserNote, foreignKey: "note", otherKey: "user", as: "SharedWith" });
 
 export default UserNote;

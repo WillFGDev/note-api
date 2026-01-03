@@ -11,7 +11,7 @@ import scopeRoutes from "./modules/scope/scope.routes";
 import noteRoutes from "./modules/note/note.routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger/swagger";
-import { DBDefaultSetup } from "./database/defaultSetup";
+//import { DBDefaultSetup } from "./database/defaultSetup";
 
 dotenv.config();
 const app = express();

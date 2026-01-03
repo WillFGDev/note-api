@@ -40,7 +40,7 @@ Note.init(
 );
 
 // Definir relación uno a muchos
-User.belongsTo(Note, { foreignKey: "ownerId", as: "sharedNotes" });
-Note.hasMany(User, { foreignKey: "ownerId" });
+User.hasMany(Note, { foreignKey: "ownerId", as: "notes" });
+Note.belongsTo(User, { foreignKey: "ownerId", as: "owner" });
 
 export default Note;

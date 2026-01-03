@@ -305,6 +305,38 @@
         "name"
       ]
     },
+    "ILog": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number"
+        },
+        "action": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "entity": {
+          "type": "string"
+        },
+        "entityId": {
+          "type": "number"
+        },
+        "before": {
+          "type":"object"
+        },
+        "after": {
+          "type":"object"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "entity",
+        "entityId"
+      ]
+    },
     "IOkResponse": {
       "type": "object",
       "properties": {

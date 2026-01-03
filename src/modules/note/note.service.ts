@@ -19,7 +19,7 @@ const noteService = {
             ]
         });
 
-    return user?.notes ?? [];
+        return user?.notes ?? [];
     },
 
     getNoteById: async (id: number) => {

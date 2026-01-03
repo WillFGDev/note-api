@@ -1,5 +1,6 @@
 import noteService from "../../src/modules/note/note.service";
 import Note from "../../src/modules/note/note.model";
+import User from "../../src/modules/user/user.model";
 import UserNote from "../../src/database/relations/userNote.model";
 
 jest.mock("../../src/modules/note/note.model", () => ({
@@ -11,6 +12,10 @@ jest.mock("../../src/modules/note/note.model", () => ({
 jest.mock("../../src/database/relations/userNote.model", () => ({
   bulkCreate: jest.fn(),
   findOne: jest.fn(),
+}));
+
+jest.mock("../../src/modules/user/user.model", () => ({
+  findByPk: jest.fn(),
 }));
 
 describe("noteService", () => {
@@ -30,15 +35,36 @@ describe("noteService", () => {
     });
   });
 
-  describe("getAllNotes", () => {
+  describe("getAllShareNotes", () => {
     it("debe devolver todas las notas compartidas", async () => {
       const mockNotes = [{ id: 1, title: "Test", content: "Test" }];
-      (Note.findAll as jest.Mock).mockResolvedValue(mockNotes);
+
+      const mockUser = {
+        notes: mockNotes
+      };
+
+      (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
 
       const result = await noteService.getAllShareNotes(1);
 
-      expect(Note.findAll).toHaveBeenCalled();
+      expect(User.findByPk).toHaveBeenCalledWith(1, {
+        include: [
+          {
+            model: Note,
+            through: { attributes: [] }
+          }
+        ]
+      });
+
       expect(result).toEqual(mockNotes);
+    });
+
+    it("debe devolver array vacío si el usuario no existe", async () => {
+      (User.findByPk as jest.Mock).mockResolvedValue(null);
+
+      const result = await noteService.getAllShareNotes(1);
+
+      expect(result).toEqual([]);
     });
   });
 
@@ -78,19 +104,29 @@ describe("noteService", () => {
   });
 
   describe("updateNote", () => {
-    it("debe actualizar un producto existente", async () => {
-      const oldNote = { id: 1, title: "Old", update: jest.fn() };
+    it("debe actualizar una nota existente", async () => {
+      const noteInstance = {
+        id: 1,
+        title: "Old",
+        get: jest.fn().mockReturnValue({ id: 1, title: "Old" }),
+        update: jest.fn(),
+      };
+
       const updatedData = { title: "Updated" };
       const updatedNote = { id: 1, title: "Updated" };
 
-      (Note.findByPk as jest.Mock).mockResolvedValue(oldNote);
-      (oldNote.update as jest.Mock).mockResolvedValue(updatedNote);
+      (Note.findByPk as jest.Mock).mockResolvedValue(noteInstance);
+      (noteInstance.update as jest.Mock).mockResolvedValue(updatedNote);
 
       const result = await noteService.updateNote(1, updatedData);
 
       expect(Note.findByPk).toHaveBeenCalledWith(1);
-      expect(oldNote.update).toHaveBeenCalledWith(updatedData);
-      expect(result).toEqual({ before: oldNote, after: updatedNote });
+      expect(noteInstance.get).toHaveBeenCalled();
+      expect(noteInstance.update).toHaveBeenCalledWith(updatedData);
+      expect(result).toEqual({
+        before: { id: 1, title: "Old" },
+        after: updatedNote,
+      });
     });
 
     it("debe devolver null si la nota no existe", async () => {

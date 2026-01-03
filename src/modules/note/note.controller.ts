@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import noteService from "./note.service";
 import { sendSuccessResponse, sendErrorResponse } from '../../common/utils/response.util';
 import { AuthRequest } from "../../common/interfaces/token.interface";
+import logService from "../log/log.service";
 
 const noteController = {
     getAll: async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -61,6 +62,7 @@ const noteController = {
     create: async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
         try 
         {
+            const userId = Number(req.user?.id);
             const { title, content } = req.body;
             if (!title || !content) 
             {
@@ -69,9 +71,17 @@ const noteController = {
             }
             const newNote = await noteService.createNote({
                 ...req.body,
-                ownerId: req.user?.id || 0
+                ownerId: userId || 0
             });
-            sendSuccessResponse(res, 201, "Nota añadida", newNote);  
+            sendSuccessResponse(res, 201, "Nota añadida", newNote);
+            
+            await logService.log({
+                userId,
+                action: "CREATE",
+                description: `Añadio una nota con el siguiente ID: ${newNote.id}`,
+                entity: "Note",
+                entityId: newNote.id,
+            });
         } 
         catch (error) 
         {
@@ -101,9 +111,19 @@ const noteController = {
                 }
             }
 
-            const updatedNote = await noteService.updateNote(note.id, req.body);
+            const updatedNote = await noteService.updateNote(note.id, req.body)
             
             sendSuccessResponse(res, 200, `Nota con ID: ${id} actualizada`, updatedNote);
+
+            await logService.log({
+                userId,
+                action: "UPDATE",
+                description: `Actualizó la nota con ID: ${id}`,
+                entity: "Note",
+                entityId: id,
+                before: updatedNote?.before,
+                after: updatedNote?.before,
+            });
         } 
         catch (error) 
         {
@@ -130,7 +150,15 @@ const noteController = {
             }
 
             const deletedNote = await noteService.deleteNote(note.id);
-            sendSuccessResponse(res, 200, `Nota con ID: ${id} eliminada`, deletedNote); 
+            sendSuccessResponse(res, 200, `Nota con ID: ${id} eliminada`, deletedNote);
+
+            await logService.log({
+                userId,
+                action: "DELETE",
+                description: `Eliminó la nota con ID: ${id}`,
+                entity: "Note",
+                entityId: id,
+            });
         } 
         catch (error) 
         {
@@ -142,6 +170,7 @@ const noteController = {
         try 
         {
             const id = parseInt(req.params.id);
+            const userId = parseInt(req.user?.id);
             const { usersId } = req.body
             const note = await noteService.getNoteById(id);
             if(!note)
@@ -150,7 +179,7 @@ const noteController = {
                 return;
             }
 
-            if(req.user?.id !== note.ownerId)
+            if(userId !== note.ownerId)
             {
                 sendErrorResponse(res, 403, "No puedes compartir una nota que no te pertenece");
                 return;
@@ -163,6 +192,15 @@ const noteController = {
                 return;
             }
             sendSuccessResponse(res, 200, `Nota con ID: ${id} compartida`, note);
+
+            await logService.log({
+                userId,
+                action: "SHARE",
+                description: `Compartio la nota con ID: ${id}`,
+                entity: "Note",
+                entityId: id,
+                after: { sharedWith: usersId },
+            });
         } 
         catch (error) 
         {

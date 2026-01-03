@@ -4,6 +4,7 @@ import { tokenSign } from "../../common/utils/token.util";
 import { sendSuccessResponse, sendErrorResponse } from "../../common/utils/response.util";
 import userService from "../user/user.service";
 import roleService from "../role/role.service";
+import logService from "../log/log.service";
 
 const authController = {
     
@@ -43,6 +44,18 @@ const authController = {
             });
 
             sendSuccessResponse(res, 200, "Inicio sesion correctamente", { id: user.id, role: user.role, scopes: scopes });
+
+            await logService.log({
+                userId: user.id,
+                action: "LOGIN",
+                description: `Inicio sesion`,
+                entity: "auth",
+                entityId: user.id,
+                after: {
+                    ip: req.ip,
+                    userAgent: req.headers["user-agent"],
+                }
+            });
         } 
         catch (error) 
         {

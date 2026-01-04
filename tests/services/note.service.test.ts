@@ -25,19 +25,33 @@ describe("noteService", () => {
 
   describe("getAllNotes", () => {
     it("debe devolver todas las notas", async () => {
-      const mockNotes = [{ id: 1, title: "Test", content: "Test" }];
+      const mockNotes = [
+        { id: 1, title: "Test", content: "Test", Owner: { name: "Test" } }
+      ];
+
       (Note.findAll as jest.Mock).mockResolvedValue(mockNotes);
 
       const result = await noteService.getAllNotes(1);
 
-      expect(Note.findAll).toHaveBeenCalled();
+      expect(Note.findAll).toHaveBeenCalledWith({
+        where: { ownerId: 1 },
+        include: [
+          {
+            model: User,
+            as: "Owner",
+            attributes: ["name"],
+          },
+        ],
+      });
       expect(result).toEqual(mockNotes);
     });
   });
 
   describe("getAllShareNotes", () => {
     it("debe devolver todas las notas compartidas", async () => {
-      const mockNotes = [{ id: 1, title: "Test", content: "Test" }];
+      const mockNotes = [
+        { id: 1, title: "Test", content: "Test", Owner: { name: "Test" } }
+      ];
 
       (User.findByPk as jest.Mock).mockResolvedValue({
         SharedNotes: mockNotes,
@@ -45,7 +59,22 @@ describe("noteService", () => {
 
       const result = await noteService.getAllShareNotes(1);
 
-      expect(User.findByPk).toHaveBeenCalledWith(1, expect.any(Object));
+      expect(User.findByPk).toHaveBeenCalledWith(1, {
+        include: [
+          {
+            model: Note,
+            as: "SharedNotes",
+            through: { attributes: [] },
+            include: [
+              {
+                model: User,
+                as: "Owner",
+                attributes: ["name"],
+              },
+            ],
+          },
+        ],
+      });
       expect(result).toEqual(mockNotes);
     });
 
@@ -60,12 +89,34 @@ describe("noteService", () => {
 
   describe("getNoteById", () => {
     it("debe devolver la nota si existe", async () => {
-      const mockNote = { id: 1, title: "Test", content: "Test" };
+      const mockNote = {
+        id: 1,
+        title: "Test",
+        content: "Test",
+        Owner: { name: "Test", email: "test@test.com" },
+        SharedWith: [{ name: "Test2", email: "test2@test.com" }],
+      };
+
       (Note.findByPk as jest.Mock).mockResolvedValue(mockNote);
 
       const result = await noteService.getNoteById(1);
 
-      expect(Note.findByPk).toHaveBeenCalledWith(1);
+      expect(Note.findByPk).toHaveBeenCalledWith(1, {
+        include: [
+          {
+            model: User,
+            as: "Owner",
+            attributes: ["name", "email"],
+          },
+          {
+            model: User,
+            as: "SharedWith",
+            attributes: ["name", "email"],
+            through: { attributes: [] },
+          },
+        ],
+      });
+
       expect(result).toEqual(mockNote);
     });
 
@@ -74,7 +125,6 @@ describe("noteService", () => {
 
       const result = await noteService.getNoteById(999);
 
-      expect(Note.findByPk).toHaveBeenCalledWith(999);
       expect(result).toBeNull();
     });
   });

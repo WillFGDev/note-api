@@ -5,7 +5,16 @@ import User from "../user/user.model";
 
 const noteService = {
     getAllNotes: async (ownerId: number) => {
-        const notes = await Note.findAll({where: { ownerId }});
+        const notes = await Note.findAll({
+            where: { ownerId },
+            include: [
+                {
+                    model: User,
+                    as: "Owner",
+                    attributes: ["name"]
+                }
+            ]
+        });
         return notes;
     },
 
@@ -15,8 +24,15 @@ const noteService = {
                 {
                     model: Note,
                     as: "SharedNotes",
-                    through: { attributes: [] }
-                }
+                    through: { attributes: [] },
+                    include: [
+                        {
+                            model: User,
+                            as: "Owner",
+                            attributes: ["name"]
+                        }
+                    ]
+                },
             ]
         });
 
@@ -24,7 +40,21 @@ const noteService = {
     },
 
     getNoteById: async (id: number) => {
-        const note = await Note.findByPk(id);
+        const note = await Note.findByPk(id, {
+            include: [
+                {
+                    model: User,
+                    as: "Owner",
+                    attributes: ["name", "email"]
+                },
+                {
+                    model: User,
+                    as: "SharedWith",
+                    attributes: ["name", "email"],
+                    through: { attributes: [] },
+                }
+            ]
+        });
         if (!note) return null;
         return note;
     },

@@ -245,6 +245,9 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "Owner": {
+          "type": "object"
         }
       },
       "required": [

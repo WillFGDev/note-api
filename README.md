@@ -20,9 +20,10 @@ API REST para la gestión de notas con autenticación de usuarios, desarrollada 
 
 - Registro e inicio de sesión de usuarios
 - Autenticación mediante JWT y Cookies
+- Administración de usuarios, roles y permisos
 - CRUD de notas
 - Asociación de notas por usuario
-- Logs, Validaciones y manejo de errores
+- Logs, validaciones y manejo de errores
 - Pruebas unitarias
 
 ## Instalación y ejecución local
